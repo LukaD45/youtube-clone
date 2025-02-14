@@ -8,6 +8,10 @@ export const AuthButton = () => {
   //TODO: Add different auth states
   return (
     <>
+      <SignedIn>
+        <UserButton />
+        {/*TODO: ADD menu itmes forstudio and user profile */}
+      </SignedIn>
       <SignedOut>
         <SignInButton mode="modal">
           <Button
