@@ -33,9 +33,24 @@ export const FilterCarousel = ({
         className="w-full px-12"
       >
         <CarouselContent className="-ml-3">
-          <CarouselItem>
-            <Badge>All</Badge>
+          <CarouselItem className="pl-3 basis-auto">
+            <Badge
+              variant={value === null ? "default" : "secondary"}
+              className="rounded-lg px-3 py-1 cursor-pointer whitespace-nowrap text-sm"
+            >
+              All
+            </Badge>
           </CarouselItem>
+          {data.map((item) => (
+            <CarouselItem className="pl-3 basis-auto" key={item.value}>
+              <Badge
+                variant={value === item.value ? "default" : "secondary"}
+                className="rounded-lg px-3 py-1 cursor-pointer whitespace-nowrap text-sm"
+              >
+                {item.label}
+              </Badge>
+            </CarouselItem>
+          ))}
         </CarouselContent>
       </Carousel>
     </div>
