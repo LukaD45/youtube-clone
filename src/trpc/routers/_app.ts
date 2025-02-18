@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { baseProcedure, createTRPCRouter } from "../init";
-import { TRPCError } from "@trpc/server";
+import { baseProcedure, createTRPCRouter, protectedProcedure } from "../init";
+
 export const appRouter = createTRPCRouter({
   hello: baseProcedure
     .input(
@@ -9,6 +9,7 @@ export const appRouter = createTRPCRouter({
       })
     )
     .query((opts) => {
+      console.log({ fromContext: opts.ctx.clerkUserId });
       return {
         greeting: `hello ${opts.input.text}`,
       };
