@@ -11,6 +11,7 @@ import {
   CarouselPrevious,
 } from "./ui/carousel";
 import { useEffect, useState } from "react";
+import { Skeleton } from "./ui/skeleton";
 
 interface FilterCarouselProps {
   value?: string | null;
@@ -57,24 +58,35 @@ export const FilterCarousel = ({
         className="w-full px-12"
       >
         <CarouselContent className="-ml-3">
-          <CarouselItem className="pl-3 basis-auto">
-            <Badge
-              variant={value === null ? "default" : "secondary"}
-              className="rounded-lg px-3 py-1 cursor-pointer whitespace-nowrap text-sm"
-            >
-              All
-            </Badge>
-          </CarouselItem>
-          {data.map((item) => (
-            <CarouselItem className="pl-3 basis-auto" key={item.value}>
+          {!isLoading && (
+            <CarouselItem className="pl-3 basis-auto">
               <Badge
-                variant={value === item.value ? "default" : "secondary"}
+                variant={!value ? "default" : "secondary"}
                 className="rounded-lg px-3 py-1 cursor-pointer whitespace-nowrap text-sm"
               >
-                {item.label}
+                All
               </Badge>
             </CarouselItem>
-          ))}
+          )}
+          {isLoading &&
+            Array.from({ length: 14 }).map((_, index) => (
+              <CarouselItem key={index} className="pl-3 basis-auto">
+                <Skeleton className="rounded-lg px-3 py-1 h-full text-sm w-[100px] font-semibold ">
+                  &nbsp;
+                </Skeleton>
+              </CarouselItem>
+            ))}
+          {!isLoading &&
+            data.map((item) => (
+              <CarouselItem className="pl-3 basis-auto" key={item.value}>
+                <Badge
+                  variant={value === item.value ? "default" : "secondary"}
+                  className="rounded-lg px-3 py-1 cursor-pointer whitespace-nowrap text-sm"
+                >
+                  {item.label}
+                </Badge>
+              </CarouselItem>
+            ))}
         </CarouselContent>
         <CarouselPrevious className="left-0 z-[20]" />
         <CarouselNext className="right-0 z-[20]" />
