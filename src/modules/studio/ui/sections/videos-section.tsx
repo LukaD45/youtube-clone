@@ -10,7 +10,7 @@ const VideosSection = () => {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
   );
-  return <div>Videos Section</div>;
+  return <div>{JSON.stringify(data)}</div>;
 };
 
 export default VideosSection;
