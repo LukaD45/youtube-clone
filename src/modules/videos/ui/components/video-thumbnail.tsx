@@ -4,12 +4,13 @@ interface VideoThumbnailProps {
   title: string;
   imageUrl?: string | null;
   previewUrl?: string | null;
+  duration: number;
 }
-
 export const VideoThumbnail = ({
   title,
   imageUrl,
   previewUrl,
+  duration,
 }: VideoThumbnailProps) => {
   return (
     <div className="relative group">
@@ -30,7 +31,9 @@ export const VideoThumbnail = ({
       </div>
 
       {/*Video Duration box */}
-      {/*TODO:Add video duration box */}
+      <div className="absolute bottom-2 right-2 px-1 py-0.5 rounded bg-black/80 text-white text-xs font-medium">
+        {duration}
+      </div>
     </div>
   );
 };
