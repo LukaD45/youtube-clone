@@ -11,10 +11,12 @@ export const videosRouter = createTRPCRouter({
       new_asset_settings: {
         passthrough: userId,
         playback_policy: ["public"],
-        mp4_support: "standard",
       },
       cors_origin: "*", // TODO: In production, set to the actual url
     });
+
+    console.log({ upload });
+    console.log({ url: upload.url });
 
     const [video] = await db
       .insert(videos)
