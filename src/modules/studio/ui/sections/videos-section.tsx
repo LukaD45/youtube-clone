@@ -68,10 +68,20 @@ const VideosSectionSuspense = () => {
                             duration={video.duration || 0}
                           />
                         </div>
+                        <div className="flex flex-col overflow-hidden gap-y-1">
+                          <span className="text-sm line-clamp-1">
+                            {video.title}
+                          </span>
+                          <span className="text-sm text-muted-foreground line-clamp-1">
+                            {video?.description || "No description"}
+                          </span>
+                        </div>
                       </div>
                     </TableCell>
                     <TableCell>visibility</TableCell>
-                    <TableCell>status</TableCell>
+                    <TableCell>
+                      <div className="flex items-center">{video.muxStatus}</div>
+                    </TableCell>
                     <TableCell>date</TableCell>
                     <TableCell>views</TableCell>
                     <TableCell>comments</TableCell>
