@@ -128,6 +128,8 @@ export const POST = async (request: Request) => {
         return new Response("Missing asset ID", { status: 400 });
       }
 
+      console.log("Track ready");
+
       await db
         .update(videos)
         .set({
