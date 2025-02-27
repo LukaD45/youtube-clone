@@ -1,9 +1,28 @@
 "use client";
 
 import { Suspense } from "react";
+import { useForm } from "react-hook-form";
 import { ErrorBoundary } from "react-error-boundary";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { trpc } from "@/trpc/client";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormLabel,
+  FormMessage,
+  item,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -34,6 +53,10 @@ const FormSectionSkeleton = () => {
 const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
   const [video] = trpc.studio.getOne.useSuspenseQuery({ id: videoId });
 
+  const form = useForm({
+    defaultValues: video,
+  });
+
   return (
     <div className="flex items-center justify-between mb-6">
       <div>
@@ -52,7 +75,7 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
               <MoreVerticalIcon />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
+          <DropdownMenuContent align="end">
             <DropdownMenuItem>
               <TrashIcon className="size-4 mr-2" />
               Delete
