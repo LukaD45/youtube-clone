@@ -57,13 +57,15 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
   const [video] = trpc.studio.getOne.useSuspenseQuery({ id: videoId });
   const [categories] = trpc.categories.getMany.useSuspenseQuery();
 
+  const update = trpc.videos.update.useMutation();
+
   const form = useForm<z.infer<typeof videoUpdateSchema>>({
     defaultValues: video,
     resolver: zodResolver(videoUpdateSchema),
   });
 
-  const onSubmit = async (data: z.infer<typeof videoUpdateSchema>) => {
-    console.log(data);
+  const onSubmit = (data: z.infer<typeof videoUpdateSchema>) => {
+    update.mutate(data);
   };
 
   return (
@@ -77,7 +79,7 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
             </p>
           </div>
           <div className="flex items-center gap-x-2">
-            <Button type="submit" disabled={false}>
+            <Button type="submit" disabled={update.isPending}>
               Save
             </Button>
             <DropdownMenu>
