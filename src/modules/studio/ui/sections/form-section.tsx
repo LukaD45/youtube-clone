@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreVerticalIcon, TrashIcon } from "lucide-react";
 import { videoUpdateSchema } from "@/db/schema";
+import { toast } from "sonner";
 
 interface FormSectionProps {
   videoId: string;
@@ -54,10 +55,20 @@ const FormSectionSkeleton = () => {
 };
 
 const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
+  const utils = trpc.useUtils();
   const [video] = trpc.studio.getOne.useSuspenseQuery({ id: videoId });
   const [categories] = trpc.categories.getMany.useSuspenseQuery();
 
-  const update = trpc.videos.update.useMutation();
+  const update = trpc.videos.update.useMutation({
+    onSuccess: () => {
+      utils.studio.getMany.invalidate();
+      utils.studio.getOne.invalidate({ id: videoId });
+      toast.success("Video updated successfully");
+    },
+    onError: () => {
+      toast.error("Something went wrong");
+    },
+  });
 
   const form = useForm<z.infer<typeof videoUpdateSchema>>({
     defaultValues: video,
