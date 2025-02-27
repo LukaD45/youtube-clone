@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
 import { ErrorBoundary } from "react-error-boundary";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,11 +32,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { CopyIcon, MoreVerticalIcon, TrashIcon } from "lucide-react";
+import {
+  CopyCheckIcon,
+  CopyIcon,
+  MoreVerticalIcon,
+  TrashIcon,
+} from "lucide-react";
 import { videoUpdateSchema } from "@/db/schema";
 import { toast } from "sonner";
 import { VideoPlayer } from "@/modules/videos/ui/components/video-player";
 import Link from "next/link";
+import { snakeCaseToTitle } from "@/lib/utils";
 
 interface FormSectionProps {
   videoId: string;
@@ -79,6 +85,21 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
 
   const onSubmit = (data: z.infer<typeof videoUpdateSchema>) => {
     update.mutate(data);
+  };
+
+  //TODO:Change if deploying outside of Vercel
+  const fullUrl = `${
+    process.env.VERCEL_URL || "http://localhost:3000"
+  }/videos/${video.id}`;
+  const [isCopied, setIsCopied] = useState(false);
+
+  const onCopy = async () => {
+    await navigator.clipboard.writeText(fullUrl);
+    setIsCopied(true);
+
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 2000);
   };
 
   return (
@@ -194,20 +215,44 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                     <div className="flex items-center gap-x-2">
                       <Link href={`/videos/${video.id}`}>
                         <p className="line-clamp-1 text-sm text-blue-500">
-                          http://localhost:3000/123
+                          {fullUrl}
                         </p>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="shrink-0"
-                          onClick={() => {}}
-                          disabled={false}
-                        >
-                          <CopyIcon />
-                        </Button>
                       </Link>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="shrink-0"
+                        onClick={onCopy}
+                        disabled={isCopied}
+                      >
+                        {isCopied ? (
+                          <CopyCheckIcon />
+                        ) : (
+                          <CopyIcon className="size-4" />
+                        )}
+                      </Button>
                     </div>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center ">
+                  <div className="flex flex-col gap-y-1">
+                    <p className="text-muted-foreground text-xs ">
+                      Video status
+                    </p>
+                    <p className="text-sm">
+                      {snakeCaseToTitle(video.muxStatus || "preparing")}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center ">
+                  <div className="flex flex-col gap-y-1">
+                    <p className="text-muted-foreground text-xs ">
+                      Subtitle status
+                    </p>
+                    <p className="text-sm">
+                      {snakeCaseToTitle(video.muxTrackStatus || "No subtitles")}
+                    </p>
                   </div>
                 </div>
               </div>
