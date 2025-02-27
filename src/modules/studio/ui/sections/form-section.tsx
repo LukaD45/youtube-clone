@@ -32,10 +32,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreVerticalIcon, TrashIcon } from "lucide-react";
+import { CopyIcon, MoreVerticalIcon, TrashIcon } from "lucide-react";
 import { videoUpdateSchema } from "@/db/schema";
 import { toast } from "sonner";
 import { VideoPlayer } from "@/modules/videos/ui/components/video-player";
+import Link from "next/link";
 
 interface FormSectionProps {
   videoId: string;
@@ -185,6 +186,30 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                   playbackId={video.muxPlaybackId}
                   thumbnailUrl={video.thumbnailUrl}
                 />
+              </div>
+              <div className="p-4 flex flex-col gap-y-6">
+                <div className="flex justify-between gap-x-2 items-center">
+                  <div className="flex flex-col gap-y-1">
+                    <p className="text-muted-foreground text-xs">Video link</p>
+                    <div className="flex items-center gap-x-2">
+                      <Link href={`/videos/${video.id}`}>
+                        <p className="line-clamp-1 text-sm text-blue-500">
+                          http://localhost:3000/123
+                        </p>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="shrink-0"
+                          onClick={() => {}}
+                          disabled={false}
+                        >
+                          <CopyIcon />
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
