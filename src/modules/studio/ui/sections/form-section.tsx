@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { ErrorBoundary } from "react-error-boundary";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 import { trpc } from "@/trpc/client";
 import { Input } from "@/components/ui/input";
@@ -31,6 +32,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreVerticalIcon, TrashIcon } from "lucide-react";
+import { videoUpdateSchema } from "@/db/schema";
 
 interface FormSectionProps {
   videoId: string;
@@ -53,9 +55,14 @@ const FormSectionSkeleton = () => {
 const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
   const [video] = trpc.studio.getOne.useSuspenseQuery({ id: videoId });
 
-  const form = useForm({
+  const form = useForm<z.infer<typeof videoUpdateSchema>>({
     defaultValues: video,
+    resolver: zodResolver(videoUpdateSchema),
   });
+
+  const onSubmit = async (data: z.infer<typeof videoUpdateSchema>) => {
+    console.log(data);
+  };
 
   return (
     <div className="flex items-center justify-between mb-6">
