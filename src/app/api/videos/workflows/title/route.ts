@@ -24,13 +24,13 @@ export const { POST } = serve(async (context) => {
 
     return existingVideo;
   });
-  console.log({ video });
 
-  await context.run("initial-step", () => {
-    console.log("initial step ran");
-  });
-
-  await context.run("second-step", () => {
-    console.log("second step ran");
+  await context.run("update-video", async () => {
+    await db
+      .update(videos)
+      .set({
+        title: "Updated from background job",
+      })
+      .where(and(eq(videos.id, video.id), eq(videos.userId, video.userId)));
   });
 });
