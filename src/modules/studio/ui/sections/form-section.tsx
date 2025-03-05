@@ -69,9 +69,92 @@ export const FormSection = ({ videoId }: FormSectionProps) => {
   );
 };
 
-const FormSectionSkeleton = () => {
-  return <div>Loading...</div>;
-};
+export function FormSectionSkeleton() {
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <div className="h-8 w-32 bg-gray-200 rounded mb-1" />
+          <div className="h-4 w-40 bg-gray-200 rounded" />
+        </div>
+        <div className="flex items-center gap-x-2">
+          <div className="h-9 w-16 bg-gray-200 rounded" />
+          <div className="h-9 w-9 bg-gray-200 rounded" />
+        </div>
+      </div>
+
+      {/* Main content grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        {/* Left column */}
+        <div className="space-y-8 lg:col-span-3">
+          {/* Title field */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-x-2">
+              <div className="h-4 w-12 bg-gray-200 rounded" />
+              <div className="h-6 w-6 bg-gray-200 rounded-full" />
+            </div>
+            <div className="h-10 bg-gray-200 rounded" />
+          </div>
+
+          {/* Description field */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-x-2">
+              <div className="h-4 w-24 bg-gray-200 rounded" />
+              <div className="h-6 w-6 bg-gray-200 rounded-full" />
+            </div>
+            <div className="h-40 bg-gray-200 rounded" />
+          </div>
+
+          {/* Thumbnail field */}
+          <div className="space-y-2">
+            <div className="h-4 w-20 bg-gray-200 rounded" />
+            <div className="h-[84px] w-[153px] bg-gray-200 rounded" />
+          </div>
+
+          {/* Category field */}
+          <div className="space-y-2">
+            <div className="h-4 w-16 bg-gray-200 rounded" />
+            <div className="h-10 bg-gray-200 rounded" />
+          </div>
+        </div>
+
+        {/* Right column */}
+        <div className="flex flex-col gap-y-8 lg:col-span-2">
+          {/* Video preview card */}
+          <div className="bg-[#f9f9f9] rounded-xl overflow-hidden">
+            <div className="aspect-video bg-gray-200" />
+            <div className="p-4 space-y-6">
+              {/* Video link */}
+              <div className="space-y-2">
+                <div className="h-4 w-20 bg-gray-200 rounded" />
+                <div className="flex items-center gap-x-2">
+                  <div className="h-5 w-64 bg-gray-200 rounded" />
+                </div>
+              </div>
+              {/* Video status */}
+              <div className="space-y-2">
+                <div className="h-4 w-24 bg-gray-200 rounded" />
+                <div className="h-5 w-32 bg-gray-200 rounded" />
+              </div>
+              {/* Subtitle status */}
+              <div className="space-y-2">
+                <div className="h-4 w-28 bg-gray-200 rounded" />
+                <div className="h-5 w-36 bg-gray-200 rounded" />
+              </div>
+            </div>
+          </div>
+
+          {/* Visibility field */}
+          <div className="space-y-2">
+            <div className="h-4 w-16 bg-gray-200 rounded" />
+            <div className="h-10 bg-gray-200 rounded" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
   const router = useRouter();
