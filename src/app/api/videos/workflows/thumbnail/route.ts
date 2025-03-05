@@ -40,7 +40,6 @@ export const { POST } = serve(async (context) => {
     }
   );
 
-  // get text:
   const tempThumbnailUrl = body.data[0].url;
 
   if (!tempThumbnailUrl) {

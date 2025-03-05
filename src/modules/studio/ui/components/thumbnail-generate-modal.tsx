@@ -51,7 +51,7 @@ export const ThumbnailGenerateModal = ({
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     generateThumbnail.mutate({ id: videoId, prompt: values.prompt });
-
+    form.reset();
     onOpenChange(false);
   };
   return (
