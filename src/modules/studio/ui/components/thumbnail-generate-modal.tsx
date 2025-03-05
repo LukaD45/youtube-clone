@@ -38,8 +38,6 @@ export const ThumbnailGenerateModal = ({
     },
   });
 
-  const utils = trpc.useUtils();
-
   const generateThumbnail = trpc.videos.generateThumbnail.useMutation({
     onSuccess: () => {
       toast.success("Background job started", {
@@ -51,9 +49,9 @@ export const ThumbnailGenerateModal = ({
     },
   });
 
-  const onSubmit = () => {
-    utils.studio.getMany.invalidate();
-    utils.studio.getOne.invalidate({ id: videoId });
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    generateThumbnail.mutate({ id: videoId, prompt: values.prompt });
+
     onOpenChange(false);
   };
   return (
