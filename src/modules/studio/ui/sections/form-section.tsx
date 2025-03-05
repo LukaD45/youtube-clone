@@ -36,10 +36,12 @@ import {
   CopyIcon,
   Globe2Icon,
   ImagePlusIcon,
+  Loader2Icon,
   LockIcon,
   MoreVerticalIcon,
   RotateCcw,
   Sparkles,
+  SparklesIcon,
   TrashIcon,
 } from "lucide-react";
 import { videoUpdateSchema } from "@/db/schema";
@@ -84,6 +86,17 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
       utils.studio.getMany.invalidate();
       utils.studio.getOne.invalidate({ id: videoId });
       toast.success("Video updated successfully");
+    },
+    onError: () => {
+      toast.error("Something went wrong");
+    },
+  });
+
+  const generateTitle = trpc.videos.generateTitle.useMutation({
+    onSuccess: () => {
+      toast.success("Background job started", {
+        description: "This may take some time",
+      });
     },
     onError: () => {
       toast.error("Something went wrong");
@@ -193,8 +206,23 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Title
-                      {/*TODO: add AI generated button*/}
+                      <div className="flex items-center gap-x-2">
+                        Title
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          type="button"
+                          className="rounded-full size-6 [&_svg]:size-3"
+                          onClick={() => generateTitle.mutate({ id: videoId })}
+                          disabled={generateTitle.isPending}
+                        >
+                          {generateTitle.isPending ? (
+                            <Loader2Icon className="animate-spin" />
+                          ) : (
+                            <SparklesIcon />
+                          )}
+                        </Button>
+                      </div>
                     </FormLabel>
                     <FormControl>
                       <Input
