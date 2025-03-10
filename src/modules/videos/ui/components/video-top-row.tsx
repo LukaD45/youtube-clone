@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { VideoGetOneOutput } from "../../types";
 import { VideoDescription } from "./video-description";
 import { VideoMenu } from "./video-menu";
@@ -9,6 +10,18 @@ interface VideoTopRowProps {
 }
 
 export const VideoTopRow = ({ video }: VideoTopRowProps) => {
+  const compactViews = useMemo(() => {
+    return Intl.NumberFormat("en", {
+      notation: "compact",
+    }).format(12343435);
+  }, []);
+
+  const expandedViews = useMemo(() => {
+    return Intl.NumberFormat("en", {
+      notation: "standard",
+    }).format(1000);
+  }, []);
+
   return (
     <div className="flex flex-col gap-4 mt-4">
       <h1 className="text-xl font-semibold">{video.title}</h1>
@@ -20,8 +33,8 @@ export const VideoTopRow = ({ video }: VideoTopRowProps) => {
         </div>
       </div>
       <VideoDescription
-        compactViews="1.5k"
-        expandedViews="1,546"
+        compactViews={compactViews}
+        expandedViews={expandedViews}
         compactDate="22/22/22"
         expandedDate="12th Jan 2025"
         description={video.description}
