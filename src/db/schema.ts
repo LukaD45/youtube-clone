@@ -35,6 +35,21 @@ export const userRelations = relations(users, ({ many }) => ({
   videoReactions: many(videoReactions),
 }));
 
+export const subscriptions = pgTable("subscriptions", {
+  viewerId: uuid("viewer_id")
+    .references(() => users.id, {
+      onDelete: "cascade",
+    })
+    .notNull(),
+  creatorId: uuid("creator_id")
+    .references(() => users.id, {
+      onDelete: "cascade",
+    })
+    .notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 export const categories = pgTable(
   "categories",
   {
