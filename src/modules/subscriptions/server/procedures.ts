@@ -8,7 +8,7 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 export const subscriptionsRouter = createTRPCRouter({
-  subscribe: protectedProcedure
+  create: protectedProcedure
     .input(z.object({ userId: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
       const { userId } = input;
