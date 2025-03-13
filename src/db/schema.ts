@@ -129,9 +129,9 @@ export const videos = pgTable("videos", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+export const videoSelectSchema = createSelectSchema(videos);
 export const videoInsertSchema = createInsertSchema(videos);
 export const videoUpdateSchema = createUpdateSchema(videos);
-export const videoSelectSchema = createSelectSchema(videos);
 
 export const videoRelations = relations(videos, ({ one, many }) => ({
   user: one(users, {
@@ -172,6 +172,10 @@ export const commentRelations = relations(comments, ({ one }) => ({
     references: [videos.id],
   }),
 }));
+
+export const commentSelectSchema = createSelectSchema(comments);
+export const commentInsertSchema = createInsertSchema(comments);
+export const commentUpdateSchema = createUpdateSchema(comments);
 
 export const videoViews = pgTable(
   "video_views",
