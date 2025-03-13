@@ -17,7 +17,7 @@ import Link from "next/link";
 import { VideoThumbnail } from "@/modules/videos/ui/components/video-thumbnail";
 import { snakeCaseToTitle } from "@/lib/utils";
 import { format } from "date-fns";
-import { Globe, Globe2Icon, LockIcon } from "lucide-react";
+import { Globe2Icon, LockIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const VideosSection = () => {
