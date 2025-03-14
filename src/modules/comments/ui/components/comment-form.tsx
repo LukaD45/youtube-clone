@@ -4,7 +4,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { commentInsertSchema } from "@/db/schema";
 import { trpc } from "@/trpc/client";
 import { Button } from "@/components/ui/button";
@@ -49,20 +55,35 @@ export const CommentForm = ({ videoId, onSuccess }: CommentFormProps) => {
 
   return (
     <Form {...form}>
-      <form className="flex gap-4 group">
+      <form
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className="flex gap-4 group"
+      >
         <UserAvatar
           size="lg"
           imageUrl={user?.imageUrl || "/user-placeholder.svg"}
           name={user?.username || "User"}
         />
         <div className="flex-1">
-          <Textarea
-            placeholder="Add a comment..."
-            className="resize-none bg-transparent overflow-hidden min-h-0"
+          <FormField
+            control={form.control}
+            name="value"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Textarea
+                    {...field}
+                    placeholder="Add a comment..."
+                    className="resize-none bg-transparent overflow-hidden min-h-0"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
 
           <div className="justify-end gap-2 mt-2 flex">
-            <Button type="submit" size="sm">
+            <Button disabled={create.isPending} type="submit" size="sm">
               Comment
             </Button>
           </div>
