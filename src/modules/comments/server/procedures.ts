@@ -5,7 +5,7 @@ import {
   createTRPCRouter,
   protectedProcedure,
 } from "@/trpc/init";
-import { eq, getTableColumns } from "drizzle-orm";
+import { desc, eq, getTableColumns } from "drizzle-orm";
 
 import { z } from "zod";
 
@@ -28,7 +28,18 @@ export const commentsRouter = createTRPCRouter({
       return createdComment;
     }),
   getMany: baseProcedure
-    .input(z.object({ videoId: z.string().uuid() }))
+    .input(
+      z.object({
+        videoId: z.string().uuid(),
+        cursor: z
+          .object({
+            id: z.string().uuid(),
+            updatedAt: z.date(),
+          })
+          .nullish(),
+        limit: z.number().min(1).max(1),
+      })
+    )
     .query(async ({ input }) => {
       const { videoId } = input;
 
@@ -36,7 +47,8 @@ export const commentsRouter = createTRPCRouter({
         .select({ ...getTableColumns(comments), user: users })
         .from(comments)
         .where(eq(comments.videoId, videoId))
-        .innerJoin(users, eq(comments.userId, users.id));
+        .innerJoin(users, eq(comments.userId, users.id))
+        .orderBy(desc(comments.updatedAt));
 
       return data;
     }),
