@@ -12,15 +12,31 @@ import {
 import { Trash2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MessageSquareIcon, MoreVerticalIcon } from "lucide-react";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth, useClerk } from "@clerk/nextjs";
+import { toast } from "sonner";
 
 interface CommentItemProps {
   comment: CommentsGetManyOutput["items"][number];
 }
 
 export const CommentItem = ({ comment }: CommentItemProps) => {
+  const clerk = useClerk();
   const { userId } = useAuth();
-  const remove = trpc.comments.remove.useMutation();
+
+  const utils = trpc.useUtils();
+  const remove = trpc.comments.remove.useMutation({
+    onSuccess: () => {
+      toast.success("Comment deleted");
+      utils.comments.getMany.invalidate({ videoId: comment.videoId });
+    },
+    onError: (error) => {
+      toast.error("Failed to delete comment");
+
+      if (error.data?.code === "UNAUTHORIZED") {
+        clerk.openSignIn();
+      }
+    },
+  });
 
   return (
     <div>
