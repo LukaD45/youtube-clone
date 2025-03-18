@@ -80,6 +80,13 @@ export const commentsRouter = createTRPCRouter({
                 eq(commentReactions.commentId, comments.id)
               )
             ),
+            dislikeCount: db.$count(
+              commentReactions,
+              and(
+                eq(commentReactions.type, "dislike"),
+                eq(commentReactions.commentId, comments.id)
+              )
+            ),
           })
           .from(comments)
           .where(
