@@ -9,11 +9,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Trash2Icon } from "lucide-react";
+import { ThumbsDownIcon, ThumbsUpIcon, Trash2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MessageSquareIcon, MoreVerticalIcon } from "lucide-react";
 import { useAuth, useClerk } from "@clerk/nextjs";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface CommentItemProps {
   comment: CommentsGetManyOutput["items"][number];
@@ -62,7 +63,30 @@ export const CommentItem = ({ comment }: CommentItemProps) => {
             </div>
           </Link>
           <p className="text-sm">{comment.value}</p>
-          {/* TODO:Reactions */}
+          <div className="flex items-center gap-2 mt-1">
+            <div className="flex items-center">
+              <Button
+                className="size-8"
+                size="icon"
+                variant="ghost"
+                disabled={false}
+                onClick={() => {}}
+              >
+                <ThumbsUpIcon className={cn("")} />
+              </Button>
+              <span className="text-xs text-muted-foreground">0</span>
+              <Button
+                className="size-8"
+                size="icon"
+                variant="ghost"
+                disabled={false}
+                onClick={() => {}}
+              >
+                <ThumbsDownIcon className={cn("")} />
+              </Button>
+              <span className="text-xs text-muted-foreground">0</span>
+            </div>
+          </div>
         </div>
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
