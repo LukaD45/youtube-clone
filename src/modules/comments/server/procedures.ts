@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { comments, users } from "@/db/schema";
+import { commentReactions, comments, users } from "@/db/schema";
 import {
   baseProcedure,
   createTRPCRouter,
@@ -70,7 +70,17 @@ export const commentsRouter = createTRPCRouter({
           .from(comments)
           .where(eq(comments.videoId, videoId)),
         await db
-          .select({ ...getTableColumns(comments), user: users })
+          .select({
+            ...getTableColumns(comments),
+            user: users,
+            likeCount: db.$count(
+              commentReactions,
+              and(
+                eq(commentReactions.type, "like"),
+                eq(commentReactions.commentId, comments.id)
+              )
+            ),
+          })
           .from(comments)
           .where(
             and(
