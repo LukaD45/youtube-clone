@@ -61,6 +61,11 @@ export const CommentForm = ({
     create.mutate(values);
   };
 
+  const handleCancel = () => {
+    form.reset();
+    onCancel?.();
+  };
+
   return (
     <Form {...form}>
       <form
@@ -93,17 +98,18 @@ export const CommentForm = ({
               </FormItem>
             )}
           />
-          {onCancel && (
-            <Button
-              variant="ghost"
-              type="button"
-              size="sm"
-              onClick={handleCancel}
-            >
-              Cancel
-            </Button>
-          )}
+
           <div className="justify-end gap-2 mt-2 flex">
+            {onCancel && (
+              <Button
+                variant="ghost"
+                type="button"
+                size="sm"
+                onClick={handleCancel}
+              >
+                Cancel
+              </Button>
+            )}
             <Button disabled={create.isPending} type="submit" size="sm">
               {variant === "reply" ? "Reply" : "Comment"}
             </Button>
