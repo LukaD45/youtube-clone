@@ -19,10 +19,18 @@ import UserAvatar from "@/components/user-avatar";
 
 interface CommentFormProps {
   videoId: string;
+  parentId?: string;
   onSuccess?: () => void;
+  onCancel?: () => void;
+  variant?: "comment" | "reply";
 }
 
-export const CommentForm = ({ videoId, onSuccess }: CommentFormProps) => {
+export const CommentForm = ({
+  videoId,
+  onSuccess,
+  onCancel,
+  variant = "comment",
+}: CommentFormProps) => {
   const { user } = useUser();
   const clerk = useClerk();
   const utils = trpc.useUtils();
@@ -73,7 +81,11 @@ export const CommentForm = ({ videoId, onSuccess }: CommentFormProps) => {
                 <FormControl>
                   <Textarea
                     {...field}
-                    placeholder="Add a comment..."
+                    placeholder={
+                      variant === "reply"
+                        ? "Reply to this comment..."
+                        : "Add a comment..."
+                    }
                     className="resize-none bg-transparent overflow-hidden min-h-0"
                   />
                 </FormControl>
@@ -81,10 +93,19 @@ export const CommentForm = ({ videoId, onSuccess }: CommentFormProps) => {
               </FormItem>
             )}
           />
-
+          {onCancel && (
+            <Button
+              variant="ghost"
+              type="button"
+              size="sm"
+              onClick={handleCancel}
+            >
+              Cancel
+            </Button>
+          )}
           <div className="justify-end gap-2 mt-2 flex">
             <Button disabled={create.isPending} type="submit" size="sm">
-              Comment
+              {variant === "reply" ? "Reply" : "Comment"}
             </Button>
           </div>
         </div>

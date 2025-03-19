@@ -15,14 +15,23 @@ import { MessageSquareIcon, MoreVerticalIcon } from "lucide-react";
 import { useAuth, useClerk } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { CommentForm } from "./comment-form";
 
 interface CommentItemProps {
   comment: CommentsGetManyOutput["items"][number];
+  variant?: "comment" | "reply";
 }
 
-export const CommentItem = ({ comment }: CommentItemProps) => {
+export const CommentItem = ({
+  comment,
+  variant = "comment",
+}: CommentItemProps) => {
   const clerk = useClerk();
   const { userId } = useAuth();
+
+  const [isReplyOpen, setIsReplyOpen] = useState(false);
+  const [isRepliesOpen, setIsRepliesOpen] = useState(false);
 
   const utils = trpc.useUtils();
   const remove = trpc.comments.remove.useMutation({
@@ -127,6 +136,16 @@ export const CommentItem = ({ comment }: CommentItemProps) => {
                 {comment.dislikeCount}
               </span>
             </div>
+            {variant === "comment" && (
+              <Button
+                onClick={() => setIsReplyOpen(true)}
+                variant="ghost"
+                size="sm"
+                className="h-8 "
+              >
+                Reply
+              </Button>
+            )}
           </div>
         </div>
         <DropdownMenu modal={false}>
@@ -136,23 +155,39 @@ export const CommentItem = ({ comment }: CommentItemProps) => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => {}}>
-              <MessageSquareIcon className="size-4 mr-2" />
-              Reply
-            </DropdownMenuItem>
+            {variant === "comment" && (
+              <DropdownMenuItem onClick={() => setIsReplyOpen(true)}>
+                <MessageSquareIcon className="size-4 mr-2" />
+                Reply
+              </DropdownMenuItem>
+            )}
             {comment.user.clerkId === userId && (
               <DropdownMenuItem
                 onClick={() => {
                   remove.mutate({ id: comment.id });
                 }}
               >
-                <Trash2Icon className="size-4 mr-2" />
+                <Trash2Icon className="size-4 " />
                 Delete
               </DropdownMenuItem>
             )}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+      {isReplyOpen && variant === "comment" && (
+        <div className="mt-4 pl-14">
+          <CommentForm
+            variant="reply"
+            parentId={comment.id}
+            videoId={comment.videoId}
+            onSuccess={() => {
+              setIsReplyOpen(false);
+              setIsRepliesOpen(true);
+            }}
+            onCancel={() => setIsReplyOpen(false)}
+          />
+        </div>
+      )}
     </div>
   );
 };
