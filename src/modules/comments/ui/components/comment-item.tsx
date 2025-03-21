@@ -155,31 +155,32 @@ export const CommentItem = ({
             )}
           </div>
         </div>
-        <DropdownMenu modal={false}>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="size-8">
-              <MoreVerticalIcon />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {variant === "comment" && (
+        {comment.user.clerkId !== userId && variant === "comment" && (
+          <DropdownMenu modal={false}>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="size-8">
+                <MoreVerticalIcon />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => setIsReplyOpen(true)}>
                 <MessageSquareIcon className="size-4 mr-2" />
                 Reply
               </DropdownMenuItem>
-            )}
-            {comment.user.clerkId === userId && (
-              <DropdownMenuItem
-                onClick={() => {
-                  remove.mutate({ id: comment.id });
-                }}
-              >
-                <Trash2Icon className="size-4 " />
-                Delete
-              </DropdownMenuItem>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
+
+              {comment.user.clerkId === userId && (
+                <DropdownMenuItem
+                  onClick={() => {
+                    remove.mutate({ id: comment.id });
+                  }}
+                >
+                  <Trash2Icon className="size-4 " />
+                  Delete
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
       {isReplyOpen && variant === "comment" && (
         <div className="mt-4 pl-14">
