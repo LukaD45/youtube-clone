@@ -28,6 +28,7 @@ interface CommentFormProps {
 export const CommentForm = ({
   videoId,
   onSuccess,
+  parentId,
   onCancel,
   variant = "comment",
 }: CommentFormProps) => {
@@ -54,6 +55,7 @@ export const CommentForm = ({
     defaultValues: {
       videoId,
       value: "",
+      parentId: parentId,
     },
   });
 

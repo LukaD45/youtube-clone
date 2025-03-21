@@ -16,6 +16,7 @@ import {
   lt,
   or,
 } from "drizzle-orm";
+import { of } from "svix/dist/openapi/rxjsStub";
 
 import { z } from "zod";
 
@@ -41,16 +42,40 @@ export const commentsRouter = createTRPCRouter({
       return deletedComment;
     }),
   create: protectedProcedure
-    .input(z.object({ videoId: z.string().uuid(), value: z.string() }))
+    .input(
+      z.object({
+        videoId: z.string().uuid(),
+        value: z.string(),
+        parentId: z.string().uuid().nullish(),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
-      const { videoId, value } = input;
+      const { videoId, value, parentId } = input;
       const { id: userId } = ctx.user;
+
+      const [existingComment] = await db
+        .select()
+        .from(comments)
+        .where(inArray(comments.id, parentId ? [parentId] : []));
+
+      if (!existingComment && parentId) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
+
+      if (existingComment?.parentId && parentId) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+        });
+      }
 
       const [createdComment] = await db
         .insert(comments)
         .values({
           userId,
           videoId,
+          parentId,
           value,
         })
         .returning();
