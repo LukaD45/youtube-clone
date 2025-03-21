@@ -172,7 +172,7 @@ export const commentsRouter = createTRPCRouter({
               parentId
                 ? eq(comments.parentId, parentId)
                 : isNull(comments.parentId),
-              isNull(comments.parentId),
+
               cursor
                 ? or(
                     lt(comments.updatedAt, cursor.updatedAt),
