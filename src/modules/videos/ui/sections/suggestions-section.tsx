@@ -5,13 +5,35 @@ import { trpc } from "@/trpc/client";
 import { VideoRowCard } from "../components/video-row-card";
 import { VideoGridCard } from "../components/video-grid-card";
 import { InfiniteScroll } from "@/components/infinite-scroll";
+import { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
 interface SuggestionsSectionProps {
   videoId: string;
   isManual?: boolean;
 }
 
+const SuggestionsSectionSkeleton = () => {
+  return (
+    <div className="space-y-10">
+      <div className="h-10 w-full bg-muted rounded-md" />
+    </div>
+  );
+};
 export const SuggestionsSection = ({
+  videoId,
+  isManual,
+}: SuggestionsSectionProps) => {
+  return (
+    <Suspense fallback={<SuggestionsSectionSkeleton />}>
+      <ErrorBoundary fallbackRender={() => <SuggestionsSectionSkeleton />}>
+        <SuggestionsSectionSuspense videoId={videoId} isManual={isManual} />
+      </ErrorBoundary>
+    </Suspense>
+  );
+};
+
+const SuggestionsSectionSuspense = ({
   videoId,
   isManual,
 }: SuggestionsSectionProps) => {
