@@ -47,10 +47,26 @@ interface VideoRowCardProps extends VariantProps<typeof videoRowCardVariants> {
 }
 
 export const VideoRowCardSkeleton = () => {
-  return <div className="flex min-w-0 flex-col gap-2">skeleton</div>;
+  return (
+    <div className="flex min-w-0 flex-col gap-2">
+      <Skeleton />
+    </div>
+  );
 };
 
 export const VideoRowCard = ({ data, size, onRemove }: VideoRowCardProps) => {
+  const compactViews = useMemo(() => {
+    return Intl.NumberFormat("en", {
+      notation: "compact",
+    }).format(data.viewCount);
+  }, [data.viewCount]);
+
+  const compactLikes = useMemo(() => {
+    return Intl.NumberFormat("en", {
+      notation: "compact",
+    }).format(data.likeCount);
+  }, [data.likeCount]);
+
   return (
     <div className={videoRowCardVariants({ size })}>
       <Link href={`/videos/${data.id}`} className={thumbnailVariants({ size })}>
@@ -76,7 +92,7 @@ export const VideoRowCard = ({ data, size, onRemove }: VideoRowCardProps) => {
             </h3>
             {size === "default" && (
               <p className="text-xs text-muted-foreground mt-1">
-                {data.viewCount} views | {data.likeCount} likes
+                {compactViews} views | {compactLikes} likes
               </p>
             )}
             {size === "default" && (
@@ -108,7 +124,7 @@ export const VideoRowCard = ({ data, size, onRemove }: VideoRowCardProps) => {
             {size === "compact" && <UserInfo size="sm" name={data.user.name} />}
             {size === "compact" && (
               <p className="text-xs text-muted-foreground mt-1">
-                {data.viewCount} views | {data.likeCount} likes
+                {compactViews} views | {compactLikes} likes
               </p>
             )}
           </Link>
