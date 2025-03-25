@@ -2,7 +2,10 @@
 
 import { DEFAULT_LIMIT } from "@/constants";
 import { trpc } from "@/trpc/client";
-import { VideoRowCard } from "../components/video-row-card";
+import {
+  VideoRowCard,
+  VideoRowCardSkeleton,
+} from "../components/video-row-card";
 import { VideoGridCard } from "../components/video-grid-card";
 import { InfiniteScroll } from "@/components/infinite-scroll";
 import { Suspense } from "react";
@@ -13,13 +16,6 @@ interface SuggestionsSectionProps {
   isManual?: boolean;
 }
 
-const SuggestionsSectionSkeleton = () => {
-  return (
-    <div className="space-y-10">
-      <div className="h-10 w-full bg-muted rounded-md" />
-    </div>
-  );
-};
 export const SuggestionsSection = ({
   videoId,
   isManual,
@@ -30,6 +26,23 @@ export const SuggestionsSection = ({
         <SuggestionsSectionSuspense videoId={videoId} isManual={isManual} />
       </ErrorBoundary>
     </Suspense>
+  );
+};
+
+const SuggestionsSectionSkeleton = () => {
+  return (
+    <>
+      <div className="hidden md:block space-y-3">
+        {Array.from({ length: 8 }).map((_, index) => (
+          <VideoRowCardSkeleton key={index} size="compact" />
+        ))}
+      </div>
+      <div className="block md:hidden space-y-10">
+        {Array.from({ length: 8 }).map((_, index) => (
+          <VideoRowCardSkeleton key={index} />
+        ))}
+      </div>
+    </>
   );
 };
 
