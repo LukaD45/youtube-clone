@@ -1,3 +1,5 @@
+import { HydrateClient, trpc } from "@/trpc/server";
+
 export const dynamic = "force-dynamic";
 
 interface PageProps {
@@ -10,10 +12,13 @@ interface PageProps {
 const SearchPage = async ({ searchParams }: PageProps) => {
   const { query, categoryId } = await searchParams;
 
+  void trpc.categories.getMany.prefetch();
+
   return (
-    <div>
+    <HydrateClient>
+      <SearchView query={query} categoryId={categoryId} />
       Searching for {query} in category: {categoryId}
-    </div>
+    </HydrateClient>
   );
 };
 
