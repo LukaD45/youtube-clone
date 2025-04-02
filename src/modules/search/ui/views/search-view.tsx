@@ -1,8 +1,8 @@
+import { CategoriesSection } from "../sections/categories-section";
+
 interface PageProps {
-  searchParams: {
-    qurey: string | undefined;
-    categoryId: string | undefined;
-  };
+  query: string | undefined;
+  categoryId: string | undefined;
 }
 
 export const SearchView = ({ query, categoryId }: PageProps) => {
