@@ -1,8 +1,8 @@
 import { db } from "@/db";
-import { videos } from "@/db/schema";
+import { users, videoReactions, videos, videoViews } from "@/db/schema";
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 
-import { eq, and, or, lt, desc, ilike } from "drizzle-orm";
+import { eq, and, or, lt, desc, ilike, getTableColumns } from "drizzle-orm";
 import { z } from "zod";
 
 export const searchRouter = createTRPCRouter({
@@ -24,8 +24,27 @@ export const searchRouter = createTRPCRouter({
       const { query, categoryId, cursor, limit } = input;
 
       const data = await db
-        .select()
+        .select({
+          ...getTableColumns(videos),
+          user: users,
+          viewCount: db.$count(videoViews, eq(videoViews.videoId, videos.id)),
+          likeCount: db.$count(
+            videoReactions,
+            and(
+              eq(videoReactions.videoId, videos.id),
+              eq(videoReactions.type, "like")
+            )
+          ),
+          dislikeCount: db.$count(
+            videoReactions,
+            and(
+              eq(videoReactions.videoId, videos.id),
+              eq(videoReactions.type, "dislike")
+            )
+          ),
+        })
         .from(videos)
+        .innerJoin(users, eq(videos.userId, users.id))
         .where(
           and(
             ilike(videos.title, `%${query}%`),

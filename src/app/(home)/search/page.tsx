@@ -24,7 +24,6 @@ const SearchPage = async ({ searchParams }: PageProps) => {
   return (
     <HydrateClient>
       <SearchView query={query} categoryId={categoryId} />
-      Searching for {query} in category: {categoryId}
     </HydrateClient>
   );
 };
