@@ -11,6 +11,7 @@ import {
   VideoGridCard,
   VideoGridCardSkeleton,
 } from "@/modules/videos/ui/components/video-grid-card";
+import { InfiniteScroll } from "@/components/infinite-scroll";
 
 interface ResultsSectionProps {
   query: string | undefined;
@@ -20,7 +21,7 @@ interface ResultsSectionProps {
 export const ResultsSection = ({ query, categoryId }: ResultsSectionProps) => {
   const isMobile = useIsMobile();
 
-  const [results, resultQuery] = trpc.search.getMany.useSuspenseInfiniteQuery(
+  const [results, resultsQuery] = trpc.search.getMany.useSuspenseInfiniteQuery(
     { query, limit: DEFAULT_LIMIT, categoryId },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -45,6 +46,11 @@ export const ResultsSection = ({ query, categoryId }: ResultsSectionProps) => {
             ))}
         </div>
       )}
+      <InfiniteScroll
+        hasNextPage={resultsQuery.hasNextPage}
+        isFetchingNextPage={resultsQuery.isFetchingNextPage}
+        fetchNextPage={resultsQuery.fetchNextPage}
+      />
     </>
   );
 };
